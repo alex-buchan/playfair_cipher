@@ -1,3 +1,6 @@
+############################################################
+#                     ENCRYPT ACTIONS
+############################################################
 
 # Take text and remove punctuation. 
     # .downcase
@@ -27,6 +30,20 @@
     # split keyword into letters
     # add keywords into rows
     # add remainder alphabet letters (omit j)
+
+
+############################################################
+#                     DECRYPT ACTIONS
+############################################################
+
+# Grab cipher text
+    # Split into arrays of 2 letters each, inside a larger array
+    
+# remake 5D array from keyword
+    # Reuse make_5d_array
+
+# 
+
 
 ############################################################
 #                    PLAINTEXT FUNCTIONS
@@ -157,9 +174,21 @@ def render_to_text(array, matrix)
     @cipher_array = array.map { |letter| matrix[letter[1]][letter[0]] }
 end
 
-def main(text, keyword)
+
+############################################################
+#                           MAIN
+############################################################
+
+
+
+def main
+    print "Please enter some text you would like to encrypt: "
+    user_input = gets.chomp
+    print "Please enter the keyword: "
+    keyword = gets.chomp
+    
     original_text = "I am... the coolest guy ever!"
-    plaintext = prepare_plaintext(text)
+    plaintext = prepare_plaintext(user_input)
     matrix = make_5d_array(keyword)
     cipher_array = transform(plaintext, matrix)
     cipher_text = cipher_array.join('')
@@ -168,15 +197,11 @@ def main(text, keyword)
     puts ''
     matrix.each { |row| print row, "\n" }
     puts ''
-    print "original_text: ", text, "\n"
+    print "original_text: ", user_input, "\n"
     print "plaintext: ", plaintext, "\n"
     print "cipher_text: ", cipher_text, "\n"    
     puts ''
+    return cipher_text
 end
 
-print "Please enter some text you would like to encrypt: "
-user_input = gets.chomp
-print "Please enter the keyword: "
-keyword = gets.chomp
-
-main(user_input, keyword)
+main
