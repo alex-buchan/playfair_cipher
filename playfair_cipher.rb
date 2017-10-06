@@ -61,6 +61,7 @@ def prepare_plaintext(text)
     remove_non_alphabetic_char(text)
     new_text = find_double_letters(text)    
     result = fix_odd_numbered_text(new_text)
+    pair_letters_of_text(result)
 end
 
 # Group the plaintext into pairs of letters
@@ -104,7 +105,7 @@ def find_chunk_position(chunk, matrix)
     chunk = chunk.split('')
 
     pair_column_indexes = chunk.map do |letter|
-        var = matrix.collect { |ind| ind.index(letter) }
+        var = matrix.collect { |row| row.index(letter) }
         var.delete_if { |result| result == nil }
         var[0]
     end
@@ -119,61 +120,57 @@ def find_chunk_position(chunk, matrix)
     result = [letter_1, letter_2]
 end
 
-def transform(plaintext, matrix)
-    chunk_array = plaintext.split(' ')
-    print "chunk_array: ", chunk_array, "\n"
+def mod_5(number)
+    number % 5
+end
+
+def transform(text, matrix)
+    chunk_array = text.split(' ')
     @cipher_array = []
     chunk_array.each do |chunk|
         chunk_position = find_chunk_position(chunk, matrix)
         letter_1 = chunk_position[0]
         letter_2 = chunk_position[1]
-        print "chunk: ", chunk, ", chunk_position: ", chunk_position, "\n"
+
         if check_same_row(chunk, matrix)
-            puts "ROW!" 
+            letter_1[0] = mod_5(letter_1[0] += 1)
+            letter_2[0] = mod_5(letter_2[0] += 1)
+            new_chunk = [letter_1, letter_2]
+            @cipher_array.push(new_chunk)
         elsif check_same_column(chunk, matrix)  
-            puts "COLUMN!" 
+            letter_1[1] = mod_5(letter_1[1] += 1)
+            letter_2[1] = mod_5(letter_2[1] += 1)
+            new_chunk = [letter_1, letter_2]
+            @cipher_array.push(new_chunk)
         else
-            puts "OTHER!" 
             letter_1[0], letter_2[0] = letter_2[0], letter_1[0]
             new_chunk = [letter_1, letter_2]
             @cipher_array.push(new_chunk)
-            print "new_chunk: ", new_chunk, "\n"
         end
     end
 
-    print "@cipher_array: ", @cipher_array, "\n"
+    render_to_text(@cipher_array.flatten(1), matrix)
+end
+
+
+def render_to_text(array, matrix)
+    @cipher_array = array.map { |letter| matrix[letter[1]][letter[0]] }
 end
 
 # print "Please enter some text: "
 # user_input = gets.chomp
-plaintext = prepare_plaintext("I am... tha coolest guy ever! MO")
-plaintext = pair_letters_of_text(plaintext)
+original_text = "I am... the coolest guy ever!"
+plaintext = prepare_plaintext(original_text)
 matrix = make_5d_array("monarchy")
-transform(plaintext, matrix)
+cipher_array = transform(plaintext, matrix)
+cipher_text = cipher_array.join('')
+cipher_text = cipher_text.scan(/../).join(' ')
 
-
-
-
-
-
-
-
-# Returns an array of booleans. If element 'true', chunk is in that row
-# def find_pair_by_row(chunk, matrix)
-#     chunk = chunk.split('')
-#     result = []
-#     matrix.each { |row| result.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
-#     print "result: ", result, "\n"
-#     return result
-# end
-
-# # Returns an array with the column indexes of the chunk
-# def find_pair_indexes_by_column(chunk, matrix)
-#     chunk = chunk.split('')
-#     pair_indexes = chunk.map do |pair|
-#         var = matrix.collect { |ind| ind.index(pair) }
-#         var.delete_if { |result| result == nil }
-#         var[0]
-#     end
-#     return pair_indexes
-# end
+puts ''
+matrix.each { |row| print row, "\n" }
+puts ''
+print "original_text: ", original_text, "\n"
+puts ''
+print "plaintext: ", plaintext, "\n"
+puts ''
+print "cipher_text: ", cipher_text, "\n"
