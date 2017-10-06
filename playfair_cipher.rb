@@ -93,7 +93,7 @@ def check_same_row(chunk, super_array)
     chunk = chunk.split('')
     print chunk, "\n"
     result = []
-    super_array.each { |row| newArray.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
+    super_array.each { |row| result.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
     return result.any?
 end
 
@@ -118,4 +118,4 @@ end
 prep = prepare_plaintext("I am... the coolest guy ever!")
 puts pair_letters_of_text(prep)
 super_array = make_5d_array("monarchy")
-check_same_column('ar', super_array)
+puts check_same_row('ar', super_array)
