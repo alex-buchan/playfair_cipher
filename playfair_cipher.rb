@@ -157,20 +157,26 @@ def render_to_text(array, matrix)
     @cipher_array = array.map { |letter| matrix[letter[1]][letter[0]] }
 end
 
-# print "Please enter some text: "
-# user_input = gets.chomp
-original_text = "I am... the coolest guy ever!"
-plaintext = prepare_plaintext(original_text)
-matrix = make_5d_array("monarchy")
-cipher_array = transform(plaintext, matrix)
-cipher_text = cipher_array.join('')
-cipher_text = cipher_text.scan(/../).join(' ')
+def main(text, keyword)
+    original_text = "I am... the coolest guy ever!"
+    plaintext = prepare_plaintext(text)
+    matrix = make_5d_array(keyword)
+    cipher_array = transform(plaintext, matrix)
+    cipher_text = cipher_array.join('')
+    cipher_text = cipher_text.scan(/../).join(' ')
+    
+    puts ''
+    matrix.each { |row| print row, "\n" }
+    puts ''
+    print "original_text: ", text, "\n"
+    print "plaintext: ", plaintext, "\n"
+    print "cipher_text: ", cipher_text, "\n"    
+    puts ''
+end
 
-puts ''
-matrix.each { |row| print row, "\n" }
-puts ''
-print "original_text: ", original_text, "\n"
-puts ''
-print "plaintext: ", plaintext, "\n"
-puts ''
-print "cipher_text: ", cipher_text, "\n"
+print "Please enter some text you would like to encrypt: "
+user_input = gets.chomp
+print "Please enter the keyword: "
+keyword = gets.chomp
+
+main(user_input, keyword)
