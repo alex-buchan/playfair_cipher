@@ -84,37 +84,50 @@ def make_5d_array(keyword)
 
     superDuper = keyword_array + a_to_z
     super_array = superDuper.each_slice(5).to_a
-    print super_array, "\n"
     super_array
 end
 
 
-def check_same_row(chunk, super_array)
+def check_same_row(chunk, matrix)
     chunk = chunk.split('')
-    print chunk, "\n"
     result = []
-    super_array.each { |row| result.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
+    matrix.each { |row| result.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
     return result.any?
 end
 
-def check_same_column(chunk, super_array)
-    chunk = chunk.split('')
-    pair_indexes = chunk.map do |pair|
-        var = super_array.collect {|ind| ind.index(pair)}
-        var.delete_if { |result| result == nil }
-        var[0]
-    end
+def check_same_column(chunk, matrix)
+    pair_indexes = find_pair_indexes(chunk, matrix)
     pair_indexes[0] == pair_indexes[1]
 end
 
-def check_other(chunk, super_array)
+def find_pair_indexes(chunk, matrix)
+    chunk = chunk.split('')
+    pair_indexes = chunk.map do |pair|
+        var = matrix.collect {|ind| ind.index(pair)}
+        var.delete_if { |result| result == nil }
+        var[0]
+    end
+    return pair_indexes
 end
 
+def transform(plaintext, matrix)
+    chunk_array = plaintext.split(' ')
+    print "chunk_array: ", chunk_array, "\n"
+    chunk_array.each do |chunk|
+        print "chunk: ", chunk, "\n"
+        if check_same_row(chunk, matrix)
+            puts "ROW!" 
+        elsif check_same_column(chunk, matrix)  
+            puts "COLUMN!" 
+        else
+            puts "OTHER!" 
+        end
+    end
+end
 
 # print "Please enter some text: "
 # user_input = gets.chomp
-prep = prepare_plaintext("I am... the coolest guy ever!")
-puts pair_letters_of_text(prep)
-super_array = make_5d_array("monarchy")
-puts check_same_column('yg', super_array)  
-
+plaintext = prepare_plaintext("I am... the coolest guy ever!")
+plaintext = pair_letters_of_text(plaintext)
+matrix = make_5d_array("monarchy")
+transform(plaintext, matrix)
