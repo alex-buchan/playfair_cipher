@@ -99,18 +99,16 @@ end
 
 def check_same_column(chunk, super_array)
     chunk = chunk.split('')
-    print chunk, "\n"
-    @var = 0
-    super_array.each do |row| 
-        @var = row.index(chunk[0])
+    pair_indexes = chunk.map do |pair|
+        var = super_array.collect {|ind| ind.index(pair)}
+        var.delete_if { |result| result == nil }
+        var[0]
     end
-    print 'Hel', @var
+    pair_indexes[0] == pair_indexes[1]
 end
 
 def check_other(chunk, super_array)
 end
-
-
 
 
 # print "Please enter some text: "
@@ -118,4 +116,5 @@ end
 prep = prepare_plaintext("I am... the coolest guy ever!")
 puts pair_letters_of_text(prep)
 super_array = make_5d_array("monarchy")
-puts check_same_row('ar', super_array)
+puts check_same_column('yg', super_array)  
+
