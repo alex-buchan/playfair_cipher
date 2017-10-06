@@ -89,21 +89,53 @@ end
 
 
 def check_same_row(chunk, matrix)
-    chunk = chunk.split('')
-    result = []
-    matrix.each { |row| result.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
-    return result.any?
+    # result = find_pair_indexes_by_row(chunk, matrix)
+    # return result.any?
+    chunk_position = find_chunk_position(chunk, matrix)
+    chunk_position[0][1] == chunk_position[1][1]
 end
 
 def check_same_column(chunk, matrix)
-    pair_indexes = find_pair_indexes(chunk, matrix)
-    pair_indexes[0] == pair_indexes[1]
+    # pair_indexes = find_pair_indexes_by_column(chunk, matrix)
+    # pair_indexes[0] == pair_indexes[1]
+    chunk_position = find_chunk_position(chunk, matrix)
+    chunk_position[0][0] == chunk_position[1][0]
 end
 
-def find_pair_indexes(chunk, matrix)
+# Returns an array with the position of the chunk letters in an array [x, y] / [col, row]
+def find_chunk_position(chunk, matrix)
+    chunk = chunk.split('')
+
+    pair_column_indexes = chunk.map do |letter|
+        var = matrix.collect { |ind| ind.index(letter) }
+        var.delete_if { |result| result == nil }
+        var[0]
+    end
+
+    pair_row_indexes = chunk.map do |letter|
+        var = matrix.map { |row| row.include?(letter) }
+        var.index(true)
+    end
+
+    letter_1 = [pair_column_indexes[0], pair_row_indexes[0]]
+    letter_2 = [pair_column_indexes[1], pair_row_indexes[1]]
+    result = [letter_1, letter_2]
+end
+
+# Returns an array of booleans. If element 'true', chunk is in that row
+def find_pair_by_row(chunk, matrix)
+    chunk = chunk.split('')
+    result = []
+    matrix.each { |row| result.push(row.include?(chunk[0]) && row.include?(chunk[1]))}
+    print "result: ", result, "\n"
+    return result
+end
+
+# Returns an array with the column indexes of the chunk
+def find_pair_indexes_by_column(chunk, matrix)
     chunk = chunk.split('')
     pair_indexes = chunk.map do |pair|
-        var = matrix.collect {|ind| ind.index(pair)}
+        var = matrix.collect { |ind| ind.index(pair) }
         var.delete_if { |result| result == nil }
         var[0]
     end
@@ -127,7 +159,8 @@ end
 
 # print "Please enter some text: "
 # user_input = gets.chomp
-plaintext = prepare_plaintext("I am... the coolest guy ever!")
+plaintext = prepare_plaintext("I am... the coolest guy ever! MO")
 plaintext = pair_letters_of_text(plaintext)
 matrix = make_5d_array("monarchy")
 transform(plaintext, matrix)
+# find_chunk_position('ia', matrix)
